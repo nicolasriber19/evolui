@@ -30,6 +30,11 @@ export interface Config extends Base {
   /** Primeiro dia de uso do app. */
   inicioEm?: DiaISO
   ultimoBackupEm?: number
+  /** Minutos de foco e de pausa do Pomodoro (padrão 25 e 5). */
+  focoMin?: number
+  pausaMin?: number
+  /** Manter a tela ligada enquanto o timer roda. */
+  manterTelaLigada?: boolean
 }
 
 export interface Area extends Base {
@@ -91,4 +96,116 @@ export interface Dia extends Base {
 export interface Semana extends Base {
   id: SemanaISO
   metas: ItemLista[]
+}
+
+// ---------- Fase 2: Corpo ----------
+
+export interface Exercicio extends Base {
+  nome: string
+}
+
+export interface ItemModelo {
+  exercicioId: string
+  series: number
+  /** Repetições sugeridas, como texto: "8-10", "12", "até a falha". */
+  repeticoes: string
+}
+
+/** Modelo de treino (A, B, C...) para não digitar tudo de novo. */
+export interface ModeloTreino extends Base {
+  nome: string
+  titulo: string
+  itens: ItemModelo[]
+  ordem: number
+}
+
+/** Um treino feito (ou em andamento, enquanto `concluidoEm` estiver vazio). */
+export interface Treino extends Base {
+  dia: DiaISO
+  modeloId?: string
+  titulo: string
+  /** Exercícios na ordem em que aparecem na tela. */
+  exercicioIds: string[]
+  iniciadoEm: number
+  concluidoEm?: number
+}
+
+/** Uma série feita. Só existe depois que você marca a série como feita. */
+export interface Serie extends Base {
+  treinoId: string
+  exercicioId: string
+  dia: DiaISO
+  ordem: number
+  cargaKg: number
+  repeticoes: number
+}
+
+/** Peso corporal e sono de um dia (os dois opcionais). */
+export interface Medida extends Base {
+  id: DiaISO
+  pesoKg?: number
+  sonoHoras?: number
+}
+
+// ---------- Fase 2: Estudo ----------
+
+export type TipoMateria = 'faculdade' | 'programacao' | 'outro'
+
+export interface Materia extends Base {
+  nome: string
+  tipo: TipoMateria
+  ativa: boolean
+  ordem: number
+}
+
+export interface SessaoEstudo extends Base {
+  materiaId: string
+  dia: DiaISO
+  inicio: number
+  minutos: number
+  origem: 'foco' | 'manual'
+}
+
+/** O timer de foco que está rodando agora (só existe um). */
+export interface EstadoFoco extends Base {
+  id: 'foco'
+  materiaId: string
+  fase: 'foco' | 'pausa'
+  rodando: boolean
+  /** Quando a fase acaba (só enquanto está rodando). */
+  fimEm?: number
+  /** Quanto falta (usado quando está pausado). */
+  restanteMs: number
+  duracaoMs: number
+  /** Quando esta fase de foco começou, para gravar a sessão no dia certo. */
+  inicioFaseEm: number
+}
+
+// ---------- Fase 2: Leitura ----------
+
+export type StatusLivro = 'lendo' | 'quero' | 'lido'
+
+export interface Livro extends Base {
+  titulo: string
+  autor: string
+  totalPaginas: number
+  paginaAtual: number
+  status: StatusLivro
+  comecouEm?: DiaISO
+  terminouEm?: DiaISO
+  ordem: number
+}
+
+export interface Leitura extends Base {
+  livroId: string
+  dia: DiaISO
+  paginas: number
+  ateAPagina: number
+}
+
+export interface NotaLivro extends Base {
+  livroId: string
+  tipo: 'nota' | 'trecho'
+  texto: string
+  pagina?: number
 }

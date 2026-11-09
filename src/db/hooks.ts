@@ -31,6 +31,53 @@ export function useSemana(semana: SemanaISO) {
   return useLiveQuery(async () => (await db.semanas.get(semana)) ?? null, [semana])
 }
 
+// ---------- Fase 2 ----------
+
+export function useExercicios() {
+  return useLiveQuery(async () => vivos(await db.exercicios.toArray()))
+}
+
+export function useModelos() {
+  return useLiveQuery(async () => vivos(await db.modelos.orderBy('ordem').toArray()))
+}
+
+export function useTreinos() {
+  return useLiveQuery(async () => vivos(await db.treinos.orderBy('dia').toArray()))
+}
+
+export function useSeries() {
+  return useLiveQuery(async () => vivos(await db.series.toArray()))
+}
+
+export function useMedidas() {
+  return useLiveQuery(async () => vivos(await db.medidas.orderBy('id').toArray()))
+}
+
+export function useMaterias() {
+  return useLiveQuery(async () => vivos(await db.materias.orderBy('ordem').toArray()))
+}
+
+export function useSessoes() {
+  return useLiveQuery(async () => vivos(await db.sessoes.orderBy('dia').toArray()))
+}
+
+/** O timer de foco atual, ou null se nenhum estiver rodando. */
+export function useEstadoFoco() {
+  return useLiveQuery(async () => (await db.estado.get('foco')) ?? null)
+}
+
+export function useLivros() {
+  return useLiveQuery(async () => vivos(await db.livros.orderBy('ordem').toArray()))
+}
+
+export function useLeituras() {
+  return useLiveQuery(async () => vivos(await db.leituras.orderBy('dia').toArray()))
+}
+
+export function useNotasLivro(livroId: string) {
+  return useLiveQuery(async () => vivos(await db.notasLivro.where('livroId').equals(livroId).toArray()), [livroId])
+}
+
 /**
  * A hora atual, atualizada a cada minuto e sempre que o app volta para a tela.
  * Serve para o dia virar sozinho se o app ficar aberto de madrugada.
