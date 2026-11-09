@@ -16,6 +16,7 @@ const Corpo = lazy(() => import('./features/corpo/Corpo').then((m) => ({ default
 const Estudo = lazy(() => import('./features/estudo/Estudo').then((m) => ({ default: m.Estudo })))
 const Leitura = lazy(() => import('./features/leitura/Leitura').then((m) => ({ default: m.Leitura })))
 const Comunicacao = lazy(() => import('./features/comunicacao/Comunicacao').then((m) => ({ default: m.Comunicacao })))
+const Mente = lazy(() => import('./features/mente/Mente').then((m) => ({ default: m.Mente })))
 const LivroDetalhe = lazy(() => import('./features/leitura/LivroDetalhe').then((m) => ({ default: m.LivroDetalhe })))
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="areas/leitura" element={<Leitura config={config} />} />
           <Route path="areas/leitura/:id" element={<LivroDetalhe config={config} />} />
           <Route path="areas/comunicacao" element={<Comunicacao config={config} />} />
+          <Route path="areas/mente" element={<Mente config={config} />} />
           <Route path="evolucao" element={<Evolucao config={config} />} />
           <Route path="ajustes" element={<Ajustes config={config} />} />
         </Route>
