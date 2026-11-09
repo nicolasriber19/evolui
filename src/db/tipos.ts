@@ -58,6 +58,8 @@ export interface Habito extends Base {
   inicio: DiaISO
   pausas: Pausa[]
   ativo: boolean
+  /** true quando foi pausado porque a área inteira foi desligada (volta sozinho ao religar). */
+  pausaDaArea?: boolean
   ordem: number
 }
 

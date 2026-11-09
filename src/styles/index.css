@@ -1,1 +1,193 @@
 @import "tailwindcss";
+@import "@fontsource-variable/archivo";
+@import "@fontsource-variable/geist";
+
+/*
+  Cores dos temas.
+  O app coloca data-tema="escuro" ou data-tema="claro" no <html>, e as variáveis abaixo trocam juntas.
+  Nas telas, use as classes com esses nomes: bg-cartao, text-tinta-suave, bg-destaque...
+*/
+:root,
+[data-tema="escuro"] {
+  color-scheme: dark;
+  --fundo: #0a1020;
+  --cartao: #111a2e;
+  --cartao-2: #17223a;
+  --tinta: #e6ecf7;
+  --tinta-suave: #8e9db8;
+  --destaque: #f0b44c;
+  --destaque-tinta: #1a1203;
+  --destaque-texto: #f0b44c;
+  --linha: rgb(230 236 247 / 0.08);
+  --linha-forte: rgb(230 236 247 / 0.18);
+  --sombra: inset 0 1px 0 rgb(255 255 255 / 0.03), 0 10px 24px -14px rgb(2 6 16 / 0.7);
+  --veu: rgb(2 6 16 / 0.62);
+  --perigo: #ff7a7a;
+
+  --area-corpo: #f08a5d;
+  --area-estudo: #5b9cf5;
+  --area-leitura: #4cc38a;
+  --area-comunicacao: #b48cf2;
+  --area-mente: #4fc1c9;
+  --area-lazer: #e87fa8;
+}
+
+[data-tema="claro"] {
+  color-scheme: light;
+  --fundo: #f3f5f9;
+  --cartao: #ffffff;
+  --cartao-2: #e9edf4;
+  --tinta: #0f1a2e;
+  --tinta-suave: #51607a;
+  --destaque: #f0b44c;
+  --destaque-tinta: #1a1203;
+  --destaque-texto: #9a5b00;
+  --linha: rgb(15 26 46 / 0.09);
+  --linha-forte: rgb(15 26 46 / 0.2);
+  --sombra: 0 1px 2px rgb(15 26 46 / 0.06), 0 10px 24px -16px rgb(15 26 46 / 0.25);
+  --veu: rgb(15 26 46 / 0.4);
+  --perigo: #c62828;
+
+  --area-corpo: #d2643a;
+  --area-estudo: #2f74d6;
+  --area-leitura: #23935f;
+  --area-comunicacao: #8a5fd6;
+  --area-mente: #1f8f98;
+  --area-lazer: #c24f7e;
+}
+
+/* Liga as variáveis acima às classes do Tailwind. */
+@theme inline {
+  --color-fundo: var(--fundo);
+  --color-cartao: var(--cartao);
+  --color-cartao-2: var(--cartao-2);
+  --color-tinta: var(--tinta);
+  --color-tinta-suave: var(--tinta-suave);
+  --color-destaque: var(--destaque);
+  --color-destaque-tinta: var(--destaque-tinta);
+  --color-destaque-texto: var(--destaque-texto);
+  --color-linha: var(--linha);
+  --color-linha-forte: var(--linha-forte);
+  --color-perigo: var(--perigo);
+
+  --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-saida: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--fundo);
+  }
+  body {
+    color: var(--tinta);
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+  /* Texto claro em fundo escuro precisa de um pouco mais de espaço para não parecer borrado. */
+  [data-tema="escuro"] body {
+    letter-spacing: 0.006em;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--destaque) 35%, transparent);
+  }
+  input,
+  textarea {
+    caret-color: var(--destaque);
+  }
+  :focus-visible {
+    outline: 2px solid var(--destaque);
+    outline-offset: 2px;
+  }
+  button {
+    cursor: pointer;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* ---------- Folha (janela que sobe de baixo) ---------- */
+dialog.folha {
+  margin: auto auto 0;
+  width: 100%;
+  max-width: 28rem;
+  max-height: 92dvh;
+  padding: 0;
+  border: 1px solid var(--linha);
+  border-bottom: 0;
+  border-radius: 20px 20px 0 0;
+  background: var(--cartao);
+  color: var(--tinta);
+}
+dialog.folha::backdrop {
+  background: var(--veu);
+}
+dialog.folha[open] {
+  animation: folha-sobe 260ms var(--ease-saida);
+}
+@keyframes folha-sobe {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+
+/* ---------- Entradas suaves ---------- */
+@keyframes entra {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+.entra {
+  animation: entra 240ms var(--ease-saida) both;
+}
+
+/* Tracinho novo na régua de votos: aparece quando o ponto dourado chega. */
+@keyframes tick-entra {
+  from {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+}
+.tick-novo {
+  transform-origin: bottom;
+  animation: tick-entra 220ms var(--ease-saida) 430ms backwards;
+}
+
+@keyframes troca-frase {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+.troca-frase {
+  animation: troca-frase 220ms var(--ease-saida);
+}
+
+/* Reduzir movimento: menos e mais suave, não zero. Fica só a opacidade. */
+@media (prefers-reduced-motion: reduce) {
+  .entra,
+  .troca-frase,
+  dialog.folha[open] {
+    animation: aparece 150ms ease-out;
+  }
+  .tick-novo {
+    animation: aparece 150ms ease-out;
+  }
+  @keyframes aparece {
+    from {
+      opacity: 0;
+    }
+  }
+}

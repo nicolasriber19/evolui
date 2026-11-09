@@ -3,7 +3,7 @@
 // Assim, se um dia o app sincronizar com a nuvem, só este arquivo precisa mudar.
 
 import { db } from './db'
-import type { Area, AreaId, Config, Dia, DiaISO, Habito, ItemLista, SemanaISO, TipoCheck } from './tipos'
+import type { AreaId, Config, Dia, DiaISO, Habito, ItemLista, SemanaISO, TipoCheck } from './tipos'
 import { novoId } from '../lib/id'
 import { semanaISO } from '../lib/datas'
 
@@ -94,8 +94,29 @@ export async function apagarHabito(id: string): Promise<void> {
 
 // ---------- Áreas ----------
 
-export async function atualizarArea(id: AreaId, mudancas: Partial<Pick<Area, 'ativa' | 'frase'>>): Promise<void> {
-  await db.areas.update(id, { ...mudancas, atualizadoEm: agora() })
+export async function atualizarFrase(id: AreaId, frase: string): Promise<void> {
+  await db.areas.update(id, { frase, atualizadoEm: agora() })
+}
+
+/**
+ * Liga ou desliga uma área. Desligar pausa os hábitos dela (para não contar falta),
+ * e religar retoma só os que foram pausados por causa da área.
+ */
+export async function ligarArea(id: AreaId, ativa: boolean, hoje: DiaISO): Promise<void> {
+  await db.transaction('rw', [db.areas, db.habitos], async () => {
+    await db.areas.update(id, { ativa, atualizadoEm: agora() })
+    const daArea = (await db.habitos.where('areaId').equals(id).toArray()).filter((h) => h.apagadoEm === undefined)
+    for (const h of daArea) {
+      if (!ativa && h.ativo) {
+        await pausarHabito(h, hoje)
+        await db.habitos.update(h.id, { pausaDaArea: true })
+      }
+      if (ativa && h.pausaDaArea) {
+        await retomarHabito(h, hoje)
+        await db.habitos.update(h.id, { pausaDaArea: false })
+      }
+    }
+  })
 }
 
 // ---------- Dia (check-in, prioridades, vitórias) ----------

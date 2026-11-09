@@ -35,6 +35,8 @@ export default defineConfig({
       workbox: {
         // Guarda no celular tudo o que o app precisa para abrir offline.
         globPatterns: ['**/*.{js,css,html,svg,png,ico,woff2}'],
+        // Letras de outros alfabetos (cirílico, vietnamita...) não são usadas em português: não precisam ir para o cache.
+        globIgnores: ['**/*-cyrillic*', '**/*-vietnamese*', '**/*-latin-ext-*'],
       },
     }),
   ],
