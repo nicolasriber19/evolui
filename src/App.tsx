@@ -6,6 +6,8 @@ import { temaSalvo, useTema } from './features/ajustes/tema'
 import { Areas } from './features/areas/Areas'
 import { Corpo } from './features/corpo/Corpo'
 import { Estudo } from './features/estudo/Estudo'
+import { Leitura } from './features/leitura/Leitura'
+import { LivroDetalhe } from './features/leitura/LivroDetalhe'
 import { Evolucao } from './features/evolucao/Evolucao'
 import { Hoje } from './features/hoje/Hoje'
 import { Onboarding } from './features/onboarding/Onboarding'
@@ -36,6 +38,8 @@ export default function App() {
           <Route path="areas" element={<Areas config={config} />} />
           <Route path="areas/corpo" element={<Corpo config={config} />} />
           <Route path="areas/estudo" element={<Estudo config={config} />} />
+          <Route path="areas/leitura" element={<Leitura config={config} />} />
+          <Route path="areas/leitura/:id" element={<LivroDetalhe config={config} />} />
           <Route path="evolucao" element={<Evolucao config={config} />} />
           <Route path="ajustes" element={<Ajustes config={config} />} />
         </Route>
