@@ -44,14 +44,17 @@ src/
   main.tsx, App.tsx       entrada, rotas e barra de abas
   styles/index.css        Tailwind + tokens de cor dos temas (data-tema="escuro" | "claro" no <html>)
   db/                     tipos.ts (formato das tabelas), db.ts (Dexie, versões 1 e 2), acoes.ts (gravações da Fase 1),
-                          acoesCorpo.ts, acoesEstudo.ts, acoesLeitura.ts (gravações da Fase 2),
+                          acoesCorpo.ts, acoesEstudo.ts, acoesLeitura.ts (gravações da Fase 2), acoesFase3.ts,
                           hooks.ts (leituras reativas com useLiveQuery), backup.ts (exportar/importar JSON)
   lib/                    lógica pura e testável: datas.ts (dia lógico), corrente.ts (regra), id.ts, areas.ts,
-                          foco.ts (timer), treino.ts (rotação, última vez, evolução), leitura.ts, formatar.ts
+                          foco.ts (timer), treino.ts (rotação, última vez, evolução), leitura.ts, formatar.ts,
+                          fase3.ts (sorteio do desafio, orçamento de lazer, promessas cumpridas)
   data/sugestoes.ts       frases, hábitos e metas prontos do onboarding
   data/treinos.ts         modelos A/B/C sugeridos (ganhar massa, seg a sex) e matérias da faculdade
+  data/comunicacao.ts     desafios, dicas de conversa e orçamento de lazer sugeridos
   components/             peças reutilizáveis (Botao, Cartao, Escala, ListaCurta, Folha, DiasSemana...)
-  features/<parte>/       uma pasta por parte do app (onboarding, hoje, areas, corpo, estudo, leitura, evolucao, ajustes, pwa)
+  features/<parte>/       uma pasta por parte do app (onboarding, hoje, areas, corpo, estudo, leitura,
+                          comunicacao, mente, lazer, evolucao, ajustes, pwa)
 ```
 
 ## Decisões do projeto (não mudar sem conversar)
@@ -82,7 +85,14 @@ src/
   Notificação só com o app em segundo plano (via service worker); com o app aberto, bipe + vibração.
 - **Treino**: série só existe quando marcada como feita (id fixo `treino:exercício:ordem`), então fechar o app não perde nada.
   A carga sugerida vem da última vez que o exercício foi feito. Modelos sugeridos só são criados se você tocar no botão.
-- **SugestaoDeVoto**: depois de registrar treino, foco ou leitura, oferece marcar o hábito pendente da área.
+- **SugestaoDeVoto**: depois de registrar treino, foco, leitura ou tentativa de conversa, oferece marcar o hábito pendente da área.
+- **Comunicação**: o desafio sorteado fica em `semanas.desafio` (cópia do texto); sorteio evita as últimas 4 semanas;
+  depois da primeira tentativa não dá mais para sortear outro. Tentativas guardam como foi (1 a 5), relato e aprendizado.
+- **Mente**: gratidão e "fiz bem" ficam no registro do dia (`dias`), junto das vitórias. Promessas cumpridas são
+  calculadas (votos + prioridades feitas + metas feitas + tentativas). Num dia com energia ou humor 1 ou 2,
+  a tela Hoje mostra uma evidência (a mesma o dia todo).
+- **Lazer**: orçamento semanal em minutos por tipo; cada registro diz se foi escolha ou piloto automático.
+  Passar do orçamento não pinta nada de vermelho: só diz quanto passou e que segunda recomeça.
 - Compatível com Capacitor no futuro (não criar APK agora).
 
 ## Design (adaptado da skill scroll-desing)
@@ -107,7 +117,8 @@ src/
 2. **Corpo, Estudo, Leitura** (feito e publicado em 09/11/2026): treino com modelos A/B/C, histórico, gráfico de carga,
    peso e sono; timer de foco com matérias e horas da semana; livros, páginas por dia, notas e trechos.
    Banco na versão 2 (testado que a versão 1 sobe sem perder dados).
-3. Comunicação (desafio semanal, dicas), Mente (diário, banco de evidências), Lazer (orçamento).
+3. **Comunicação, Mente, Lazer** (feito e publicado em 09/11/2026): desafio sorteado, tentativas, dicas; diário curto,
+   evidências, promessas cumpridas; orçamento de lazer. Banco na versão 3 (testado que a 2 sobe sem perder dados).
 4. Revisão semanal, painel de Evolução (Recharts), heatmap, XP e níveis.
 5. Polimento, lembretes via arquivo .ics para a agenda, revisão de acessibilidade.
 
@@ -118,4 +129,5 @@ src/
 - Modo de aprendizado: Claude escreve quase tudo e deixa 1 ou 2 tarefas pequenas por fase para ele (com dicas), depois revisa.
   Tarefas da Fase 1: personalizar `src/data/sugestoes.ts`; escrever o teste `it.todo` em `src/lib/corrente.test.ts`.
   Tarefa da Fase 2: implementar `formatarMinutos` em `src/lib/formatar.ts` e os testes `it.todo` de `formatar.test.ts`.
+  Tarefa da Fase 3: reescrever desafios e dicas em `src/data/comunicacao.ts` com situações da vida dele.
 - Um commit por etapa, mensagens claras em português.
