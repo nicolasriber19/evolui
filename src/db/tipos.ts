@@ -37,6 +37,23 @@ export interface Config extends Base {
   manterTelaLigada?: boolean
   /** Fase 4: último nível de cada área que você já viu (para avisar quando sobe). */
   niveisVistos?: Partial<Record<AreaId, number>>
+  /** Fase 5: lembretes que vão para a agenda do celular. */
+  lembretes?: Lembrete[]
+}
+
+/** Um lembrete que vira evento repetido na agenda (Google Agenda ou arquivo .ics). */
+export interface Lembrete {
+  id: string
+  titulo: string
+  texto: string
+  /** 'HH:MM' */
+  hora: string
+  /** Dias da semana (0 = domingo). Vazio + mensal = primeiro domingo de cada mês. */
+  dias: number[]
+  mensal?: boolean
+  ativo: boolean
+  /** Endereço do app que o lembrete abre. */
+  caminho: string
 }
 
 export interface Area extends Base {

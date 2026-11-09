@@ -14,6 +14,7 @@ import { descreverDias, diaLogico } from '../../lib/datas'
 import { estaInstalado, instalarApp, useConviteInstalacao } from '../pwa/instalar'
 import { EditorHabito } from './EditorHabito'
 import { SecaoBackup } from './SecaoBackup'
+import { SecaoLembretes } from './SecaoLembretes'
 
 const TEMAS: { valor: Tema; rotulo: string; Icone: typeof Moon }[] = [
   { valor: 'escuro', rotulo: 'Escuro', Icone: Moon },
@@ -141,6 +142,7 @@ export function Ajustes({ config }: { config: Config }) {
         </div>
       </Cartao>
 
+      <SecaoLembretes config={config} hoje={hoje} />
       <SecaoBackup config={config} />
       <SecaoApp />
 
