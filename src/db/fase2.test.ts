@@ -1,4 +1,5 @@
 import 'fake-indexeddb/auto'
+import Dexie from 'dexie'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { db, vivos } from './db'
 import { avancarFase, iniciarFoco, encerrarFoco } from './acoesEstudo'
@@ -65,5 +66,32 @@ describe('leitura no banco', () => {
     expect(r.terminou).toBe(true)
     expect((await db.livros.get(id))?.status).toBe('lido')
     expect((await db.leituras.orderBy('dia').toArray()).map((l) => l.paginas)).toEqual([30, 270])
+  })
+})
+
+describe('atualização do banco', () => {
+  it('passa da versão 1 para a 2 sem perder os dados de quem já usava o app', async () => {
+    db.close()
+    await Dexie.delete('evolui')
+    // Monta um banco exatamente como a versão publicada na Fase 1 deixava no celular.
+    const antigo = new Dexie('evolui')
+    antigo.version(1).stores({
+      config: 'id',
+      areas: 'id, ordem',
+      habitos: 'id, areaId, ordem',
+      checks: 'id, habitoId, areaId, dia',
+      dias: 'id',
+      semanas: 'id',
+    })
+    await antigo.open()
+    await antigo.table('habitos').add({ id: 'h1', nome: 'Treinar', areaId: 'corpo', ordem: 0 })
+    await antigo.table('checks').add({ id: 'h1:2026-11-09', habitoId: 'h1', areaId: 'corpo', dia: '2026-11-09', tipo: 'completo' })
+    antigo.close()
+
+    await db.open() // o app novo abre o mesmo banco
+    expect(db.verno).toBe(2)
+    expect((await db.habitos.get('h1'))?.nome).toBe('Treinar')
+    expect(await db.checks.count()).toBe(1)
+    expect(await db.livros.count()).toBe(0) // tabelas novas nascem vazias
   })
 })
