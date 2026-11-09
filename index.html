@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR" data-tema="escuro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Evolui</title>
+    <meta name="description" content="Seu crescimento, um dia de cada vez." />
+    <meta name="theme-color" content="#0A1020" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/logo.svg" sizes="any" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+    <script>
+      // Aplica o tema antes do app carregar, para a tela não "piscar" em outra cor.
+      (function () {
+        try {
+          var t = localStorage.getItem('evolui-tema') || 'escuro'
+          if (t === 'sistema') t = matchMedia('(prefers-color-scheme: light)').matches ? 'claro' : 'escuro'
+          document.documentElement.dataset.tema = t
+          document.querySelector('meta[name=theme-color]').setAttribute('content', t === 'claro' ? '#F3F5F9' : '#0A1020')
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
