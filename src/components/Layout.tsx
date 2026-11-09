@@ -1,5 +1,5 @@
 import { ChartLine, LayoutGrid, Settings, Sun } from 'lucide-react'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import type { Config } from '../db/tipos'
 import { useMotorFoco } from '../features/estudo/motorFoco'
@@ -25,7 +25,10 @@ export function Layout({ config }: { config: Config }) {
   return (
     <>
       <main className="mx-auto w-full max-w-md px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[calc(9rem+env(safe-area-inset-bottom))]">
-        <Outlet />
+        {/* Suspense: enquanto uma tela "sob demanda" carrega, mostra o fundo vazio por um instante. */}
+        <Suspense fallback={null}>
+          <Outlet />
+        </Suspense>
       </main>
       <BarraAtividade />
       <nav

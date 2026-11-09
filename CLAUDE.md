@@ -22,12 +22,19 @@ Armadilhas já encontradas:
 - Efeitos do React nunca podem devolver nada além de função: `useEffect(() => window.scrollTo(0, 0))` quebra,
   porque no Chrome novo `scrollTo` devolve uma Promise. Use chaves: `useEffect(() => { window.scrollTo(0, 0) })`.
 - O primeiro uso é decidido no App (`config.onboardingFeito`), sem rota nem `<Navigate>`.
+- Testes que leem uma tabela inteira devem ordenar por um índice (`orderBy('dia')`): a ordem pelo id (UUID) é aleatória.
+- Timer: calcule o tempo com `Date.now()` na hora de desenhar; `useAgora` serve só para redesenhar a cada segundo.
+- Verificação visual: o painel do navegador embutido dá prints velhos quando está escondido; use Chrome sem janela
+  (playwright-core apontando para o Chrome instalado), com `page.clock` para simular dia e hora.
 
 ## Stack
 
 React 19 + Vite 8 + TypeScript 7 + Tailwind CSS 4 + Dexie 4 (IndexedDB) + React Router 8 + date-fns 4
 + lucide-react (ícones) + vite-plugin-pwa (app instalável/offline) + Vitest (testes) + fake-indexeddb (testes do banco).
-Fontes guardadas no app via Fontsource: Archivo (títulos/números) e Geist (texto). Recharts entra só na Fase 4.
+Fontes guardadas no app via Fontsource: Archivo (títulos/números) e Geist (texto).
+Recharts 3 só no gráfico de linha (`components/GraficoLinha.tsx`, carregado com React.lazy). Barras e colunas
+simples são HTML/CSS (`components/Graficos.tsx`). Cor de série validada com a skill dataviz: `--grafico`
+(#F0B44C no escuro, #B7791F no claro). As telas Corpo, Estudo e Leitura também são carregadas sob demanda.
 Gerenciador de pacotes: **npm** (não pnpm). Sem backend e sem login.
 
 ## Estrutura
@@ -36,12 +43,15 @@ Gerenciador de pacotes: **npm** (não pnpm). Sem backend e sem login.
 src/
   main.tsx, App.tsx       entrada, rotas e barra de abas
   styles/index.css        Tailwind + tokens de cor dos temas (data-tema="escuro" | "claro" no <html>)
-  db/                     tipos.ts (formato das tabelas), db.ts (Dexie), acoes.ts (gravações),
+  db/                     tipos.ts (formato das tabelas), db.ts (Dexie, versões 1 e 2), acoes.ts (gravações da Fase 1),
+                          acoesCorpo.ts, acoesEstudo.ts, acoesLeitura.ts (gravações da Fase 2),
                           hooks.ts (leituras reativas com useLiveQuery), backup.ts (exportar/importar JSON)
-  lib/                    lógica pura e testável: datas.ts (dia lógico), corrente.ts (regra), id.ts, areas.ts
+  lib/                    lógica pura e testável: datas.ts (dia lógico), corrente.ts (regra), id.ts, areas.ts,
+                          foco.ts (timer), treino.ts (rotação, última vez, evolução), leitura.ts, formatar.ts
   data/sugestoes.ts       frases, hábitos e metas prontos do onboarding
+  data/treinos.ts         modelos A/B/C sugeridos (ganhar massa, seg a sex) e matérias da faculdade
   components/             peças reutilizáveis (Botao, Cartao, Escala, ListaCurta, Folha, DiasSemana...)
-  features/<parte>/       uma pasta por parte do app (onboarding, hoje, areas, evolucao, ajustes, pwa)
+  features/<parte>/       uma pasta por parte do app (onboarding, hoje, areas, corpo, estudo, leitura, evolucao, ajustes, pwa)
 ```
 
 ## Decisões do projeto (não mudar sem conversar)
@@ -67,6 +77,12 @@ src/
   A pasta `.vercel/` (ligação com o projeto) fica fora do git. `vercel.json` faz todas as rotas caírem no index.html.
   Se o login expirar: `npx vercel login` mostra um link com código; abrir no Chrome do Nicolas (`start chrome <link>`),
   porque o login do Google não funciona no navegador embutido.
+- **Timer de foco** guarda o horário de fim (`estado.fimEm`) no banco; o "motor" (`features/estudo/motorFoco.ts`, no Layout)
+  confere a cada segundo e ao voltar ao app; `avancarFase` grava a sessão numa transação (uma vez só).
+  Notificação só com o app em segundo plano (via service worker); com o app aberto, bipe + vibração.
+- **Treino**: série só existe quando marcada como feita (id fixo `treino:exercício:ordem`), então fechar o app não perde nada.
+  A carga sugerida vem da última vez que o exercício foi feito. Modelos sugeridos só são criados se você tocar no botão.
+- **SugestaoDeVoto**: depois de registrar treino, foco ou leitura, oferece marcar o hábito pendente da área.
 - Compatível com Capacitor no futuro (não criar APK agora).
 
 ## Design (adaptado da skill scroll-desing)
@@ -88,7 +104,9 @@ src/
    Ajustes (hábitos, áreas, tema, horários, backup), Áreas e Evolução simples, PWA offline.
    Verificado com build, Vitest e um Chrome automático (Playwright) passando por onboarding, Hoje, Ajustes,
    backup/restaurar, tema claro e modo offline.
-2. Corpo (treinos ABC, carga, peso/sono), Estudo (Pomodoro, matérias Python/HTML/CSS), Leitura.
+2. **Corpo, Estudo, Leitura** (feito e publicado em 09/11/2026): treino com modelos A/B/C, histórico, gráfico de carga,
+   peso e sono; timer de foco com matérias e horas da semana; livros, páginas por dia, notas e trechos.
+   Banco na versão 2 (testado que a versão 1 sobe sem perder dados).
 3. Comunicação (desafio semanal, dicas), Mente (diário, banco de evidências), Lazer (orçamento).
 4. Revisão semanal, painel de Evolução (Recharts), heatmap, XP e níveis.
 5. Polimento, lembretes via arquivo .ics para a agenda, revisão de acessibilidade.
@@ -99,4 +117,5 @@ src/
   e 1 ou 2 conceitos de programação explicados de forma simples.
 - Modo de aprendizado: Claude escreve quase tudo e deixa 1 ou 2 tarefas pequenas por fase para ele (com dicas), depois revisa.
   Tarefas da Fase 1: personalizar `src/data/sugestoes.ts`; escrever o teste `it.todo` em `src/lib/corrente.test.ts`.
+  Tarefa da Fase 2: implementar `formatarMinutos` em `src/lib/formatar.ts` e os testes `it.todo` de `formatar.test.ts`.
 - Um commit por etapa, mensagens claras em português.
