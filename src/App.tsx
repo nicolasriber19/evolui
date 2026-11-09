@@ -16,21 +16,24 @@ export default function App() {
   // undefined = ainda lendo o banco (dura uma fração de segundo). O fundo já está pintado.
   if (config === undefined) return null
 
-  const pronto = config?.onboardingFeito === true
+  // Primeiro uso: mostra o passo a passo. Quando ele termina, o banco muda e o app abre a tela Hoje sozinho.
+  if (!config?.onboardingFeito) {
+    return (
+      <>
+        <Onboarding />
+        <AvisoAtualizacao />
+      </>
+    )
+  }
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/boas-vindas" element={pronto ? <Navigate to="/" replace /> : <Onboarding />} />
-        <Route element={pronto ? <Layout /> : <Navigate to="/boas-vindas" replace />}>
-          {pronto && (
-            <>
-              <Route index element={<Hoje config={config} />} />
-              <Route path="areas" element={<Areas config={config} />} />
-              <Route path="evolucao" element={<Evolucao config={config} />} />
-              <Route path="ajustes" element={<Ajustes config={config} />} />
-            </>
-          )}
+        <Route element={<Layout />}>
+          <Route index element={<Hoje config={config} />} />
+          <Route path="areas" element={<Areas config={config} />} />
+          <Route path="evolucao" element={<Evolucao config={config} />} />
+          <Route path="ajustes" element={<Ajustes config={config} />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

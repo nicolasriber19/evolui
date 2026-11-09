@@ -12,13 +12,23 @@ interface Props {
   rotuloCampo: string
   mensagemLimite: string
   sugestoes?: string[]
+  maxSugestoes?: number
 }
 
 /** Lista curta com limite (prioridades do dia, metas da semana). Tocar no círculo conclui. */
-export function ListaCurta({ itens, onMudar, max = 3, placeholder, rotuloCampo, mensagemLimite, sugestoes = [] }: Props) {
+export function ListaCurta({
+  itens,
+  onMudar,
+  max = 3,
+  placeholder,
+  rotuloCampo,
+  mensagemLimite,
+  sugestoes = [],
+  maxSugestoes = 3,
+}: Props) {
   const [texto, setTexto] = useState('')
   const cheia = itens.length >= max
-  const sugestoesLivres = sugestoes.filter((s) => !itens.some((i) => i.texto === s)).slice(0, 3)
+  const sugestoesLivres = sugestoes.filter((s) => !itens.some((i) => i.texto === s)).slice(0, maxSugestoes)
 
   function adicionar(valor: string) {
     const limpo = valor.trim()
