@@ -194,3 +194,71 @@ dialog.folha[open] {
     }
   }
 }
+
+/*
+  ---------- Revisão "Sua semana": animações guiadas pela rolagem ----------
+  animation-timeline faz a animação andar junto com a rolagem, e não com o tempo.
+  Navegador sem suporte (ou "reduzir movimento" ligado): tudo aparece pronto, sem animar.
+*/
+@keyframes rv-revela {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+@keyframes rv-acende {
+  from {
+    opacity: 0.12;
+    transform: scaleY(0.3);
+  }
+}
+@keyframes rv-desenha {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes rv-estica {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .rv-revela {
+      animation: rv-revela linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 28%;
+    }
+    /* O "palco" do pico: um trecho alto da página; enquanto ele passa, os dias se acendem um a um. */
+    .rv-palco {
+      view-timeline: --palco block;
+    }
+    .rv-dia {
+      transform-origin: bottom;
+      animation: rv-acende linear both;
+      animation-timeline: --palco;
+      animation-range: contain var(--rv-ini) contain var(--rv-fim);
+    }
+    .rv-fim-palco {
+      animation: rv-revela linear both;
+      animation-timeline: --palco;
+      animation-range: contain 76% contain 90%;
+    }
+    .rv-linha {
+      stroke-dasharray: 1;
+      animation: rv-desenha linear both;
+      animation-timeline: view();
+      animation-range: entry 35% cover 55%;
+    }
+    .rv-barra {
+      transform-origin: left;
+      animation: rv-estica linear both;
+      animation-timeline: view();
+      animation-range: entry 35% cover 52%;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { Layout } from './components/Layout'
 import { useConfig } from './db/hooks'
@@ -18,6 +18,7 @@ const Leitura = lazy(() => import('./features/leitura/Leitura').then((m) => ({ d
 const Comunicacao = lazy(() => import('./features/comunicacao/Comunicacao').then((m) => ({ default: m.Comunicacao })))
 const Mente = lazy(() => import('./features/mente/Mente').then((m) => ({ default: m.Mente })))
 const Lazer = lazy(() => import('./features/lazer/Lazer').then((m) => ({ default: m.Lazer })))
+const Revisao = lazy(() => import('./features/revisao/Revisao').then((m) => ({ default: m.Revisao })))
 const LivroDetalhe = lazy(() => import('./features/leitura/LivroDetalhe').then((m) => ({ default: m.LivroDetalhe })))
 
 export default function App() {
@@ -53,6 +54,15 @@ export default function App() {
           <Route path="evolucao" element={<Evolucao config={config} />} />
           <Route path="ajustes" element={<Ajustes config={config} />} />
         </Route>
+        {/* A revisão ocupa a tela toda, sem a barra de abas. */}
+        <Route
+          path="revisao/:semana?"
+          element={
+            <Suspense fallback={null}>
+              <Revisao config={config} />
+            </Suspense>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <AvisoAtualizacao />

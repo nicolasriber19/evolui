@@ -48,3 +48,14 @@ describe('datas', () => {
     expect(descreverDias([1, 3, 4, 5])).toBe('seg, qua, qui, sex')
   })
 })
+
+describe('semanas ISO', () => {
+  it('acha a segunda-feira de uma semana', async () => {
+    const { segundaDaSemana, intervaloDaSemana, numeroDaSemana } = await import('./datas')
+    expect(segundaDaSemana('2026-W46')).toBe('2026-11-09')
+    expect(segundaDaSemana('2026-W01')).toBe('2025-12-29')
+    expect(segundaDaSemana('2027-W01')).toBe('2027-01-04')
+    expect(intervaloDaSemana('2026-W46')).toBe('9 a 15 de nov')
+    expect(numeroDaSemana('2026-W46')).toBe(46)
+  })
+})

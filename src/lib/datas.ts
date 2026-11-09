@@ -83,3 +83,23 @@ export function descreverDias(dias: number[]): string {
   }
   return posicoes.map((p) => NOMES_CURTOS[ordem[p]]).join(', ')
 }
+
+/** A segunda-feira de uma semana ISO: '2026-W46' vira '2026-11-09'. */
+export function segundaDaSemana(semana: SemanaISO): DiaISO {
+  const [ano, numero] = semana.split('-W').map(Number)
+  // O dia 4 de janeiro sempre cai na semana 1 do ano ISO.
+  const segundaDaSemana1 = startOfISOWeek(new Date(ano, 0, 4, 12))
+  return format(addDays(segundaDaSemana1, (numero - 1) * 7), 'yyyy-MM-dd')
+}
+
+/** Ex.: '9 a 15 de nov.' */
+export function intervaloDaSemana(semana: SemanaISO): string {
+  const seg = segundaDaSemana(semana)
+  const dom = somarDias(seg, 6)
+  return `${paraData(seg).getDate()} a ${diaCurto(dom)}`
+}
+
+/** Só o número da semana: '2026-W46' vira 46. */
+export function numeroDaSemana(semana: SemanaISO): number {
+  return Number(semana.split('-W')[1])
+}
