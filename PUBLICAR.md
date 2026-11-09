@@ -3,7 +3,21 @@
 O Evolui mora em **https://evolui-gilt.vercel.app**. Publicar é mandar a versão nova do código para lá.
 O celular percebe sozinho e mostra o aviso **"Tem uma versão nova do Evolui"**.
 
-## O jeito rápido (um comando)
+## O jeito mais simples: git push
+
+O repositório https://github.com/nicolasriber19/evolui está ligado à Vercel. Então publicar é só:
+
+```bash
+git add -A
+git commit -m "o que mudou"
+git push
+```
+
+A Vercel percebe o push, roda os testes (`npm test`) e o build nos servidores dela e, se tudo passar, coloca
+o site novo no ar em um ou dois minutos. Se algum teste falhar, o site no ar continua o antigo: nada quebra.
+Para acompanhar: vercel.com > projeto evolui > Deployments.
+
+## O jeito pelo terminal (um comando)
 
 Abra o terminal na pasta `evolui` e rode:
 
@@ -23,7 +37,7 @@ No fim aparece algo como `Production URL: https://evolui-gilt.vercel.app`. Pront
 
 1. Abra https://evolui-gilt.vercel.app no PC e confira se a mudança está lá.
 2. No celular, abra o app. Em alguns segundos aparece **"Tem uma versão nova do Evolui"**: toque em **Atualizar**.
-3. Faça um commit com o que mudou, se ainda não fez: `git add -A` e `git commit -m "o que mudou"`.
+3. Se publicou pelo terminal, faça também o commit e o push, para o GitHub ficar igual ao site.
 
 ## Se der errado
 
@@ -41,8 +55,3 @@ No fim aparece algo como `Production URL: https://evolui-gilt.vercel.app`. Pront
 - **Faça backup antes de mudanças grandes** no banco de dados (Ajustes > Backup > Baixar).
 - Mudou o formato de uma tabela? Crie uma versão nova em `src/db/db.ts` (veja como as versões 2 e 3 foram feitas)
   e escreva um teste que prova que os dados antigos sobem sem se perder (veja `src/db/fase3.test.ts`).
-
-## Para o futuro: publicar sozinho a cada commit
-
-Se você colocar o código no GitHub, dá para ligar o repositório na Vercel (vercel.com > projeto > Settings > Git).
-Aí cada `git push` publica sozinho, sem precisar do `npm run publicar`.

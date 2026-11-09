@@ -81,7 +81,11 @@ src/
 - **Publicado na Vercel**: https://evolui-gilt.vercel.app (conta `nicolasriber-3803`, projeto `evolui`).
   NÃO trocar esse endereço: os dados do celular ficam presos a ele (IndexedDB é por origem).
   Publicar uma versão nova: `npm test && npm run build` e depois `npx vercel --prod` dentro de `evolui/`.
-  A pasta `.vercel/` (ligação com o projeto) fica fora do git. `vercel.json` faz todas as rotas caírem no index.html.
+  A pasta `.vercel/` (ligação com o projeto) fica fora do git. `vercel.json` faz todas as rotas caírem no index.html
+  e define o build da Vercel como `npm test && npm run build` (teste falhou = não publica).
+- **GitHub**: https://github.com/nicolasriber19/evolui (público, remoto `origin`, branch `main`), ligado à Vercel:
+  cada `git push` publica sozinho. Commits com o e-mail privado do GitHub
+  (`318340732+nicolasriber19@users.noreply.github.com`, já configurado no git local do projeto): nunca usar o Gmail aqui.
   Se o login expirar: `npx vercel login` mostra um link com código; abrir no Chrome do Nicolas (`start chrome <link>`),
   porque o login do Google não funciona no navegador embutido.
 - **Timer de foco** guarda o horário de fim (`estado.fimEm`) no banco; o "motor" (`features/estudo/motorFoco.ts`, no Layout)
