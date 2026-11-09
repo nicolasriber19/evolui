@@ -12,6 +12,7 @@ import { feitosPorHabito, votosPorDia } from '../../lib/votos'
 import { AvisoBackup } from './AvisoBackup'
 import { CheckIn } from './CheckIn'
 import { DesafioDaSemanaNaHoje, EvidenciaDoDiaDificil } from './CartoesFase3'
+import { AvisoNivel, ChamadaRevisao } from './CartoesFase4'
 import { HabitoLinha } from './HabitoLinha'
 import { Identidade } from './Identidade'
 import { Vitorias } from './Vitorias'
@@ -99,6 +100,8 @@ export function Hoje({ config }: { config: Config }) {
         />
       )}
 
+      <ChamadaRevisao hoje={hoje} />
+      <AvisoNivel config={config} areas={areas} />
       <AvisoBackup config={config} hoje={hoje} />
 
       {/* À noite, as vitórias sobem para o topo. */}
@@ -158,6 +161,9 @@ export function Hoje({ config }: { config: Config }) {
       </Cartao>
 
       <Cartao titulo="Metas da semana">
+        {semana?.foco && (
+          <p className="mb-3 font-display text-lg leading-snug tracking-tight text-destaque-texto">Foco: {semana.foco}</p>
+        )}
         <ListaCurta
           itens={semana?.metas ?? []}
           onMudar={(lista) => void salvarMetas(semanaId, lista)}
