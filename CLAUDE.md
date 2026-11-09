@@ -15,6 +15,13 @@ npm run icones       # gera os ícones PNG a partir de public/logo.svg
 ```
 
 Sempre rode `npm test` e `npm run build` sem erros antes de dar uma fase por terminada.
+No app desktop do Claude, os servidores estão no `.claude/launch.json` da pasta mãe: `evolui-dev` (porta 5180)
+e `evolui-preview` (porta 4180, build final com PWA).
+
+Armadilhas já encontradas:
+- Efeitos do React nunca podem devolver nada além de função: `useEffect(() => window.scrollTo(0, 0))` quebra,
+  porque no Chrome novo `scrollTo` devolve uma Promise. Use chaves: `useEffect(() => { window.scrollTo(0, 0) })`.
+- O primeiro uso é decidido no App (`config.onboardingFeito`), sem rota nem `<Navigate>`.
 
 ## Stack
 
@@ -73,7 +80,10 @@ src/
 
 ## Fases
 
-1. **MVP** (em andamento): onboarding, Hoje, hábitos + regra, backup, PWA, publicação.
+1. **MVP** (feito em 08/11/2026, falta só publicar na Vercel): onboarding, Hoje (voto que voa), hábitos + regra,
+   Ajustes (hábitos, áreas, tema, horários, backup), Áreas e Evolução simples, PWA offline.
+   Verificado com build, Vitest e um Chrome automático (Playwright) passando por onboarding, Hoje, Ajustes,
+   backup/restaurar, tema claro e modo offline.
 2. Corpo (treinos ABC, carga, peso/sono), Estudo (Pomodoro, matérias Python/HTML/CSS), Leitura.
 3. Comunicação (desafio semanal, dicas), Mente (diário, banco de evidências), Lazer (orçamento).
 4. Revisão semanal, painel de Evolução (Recharts), heatmap, XP e níveis.
