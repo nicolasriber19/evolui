@@ -89,7 +89,7 @@ describe('atualização do banco', () => {
     antigo.close()
 
     await db.open() // o app novo abre o mesmo banco
-    expect(db.verno).toBe(2)
+    expect(db.verno).toBeGreaterThanOrEqual(2)
     expect((await db.habitos.get('h1'))?.nome).toBe('Treinar')
     expect(await db.checks.count()).toBe(1)
     expect(await db.livros.count()).toBe(0) // tabelas novas nascem vazias

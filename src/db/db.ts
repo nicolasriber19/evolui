@@ -3,7 +3,10 @@ import type {
   Area,
   Check,
   Config,
+  Desafio,
   Dia,
+  Dica,
+  Evidencia,
   EstadoFoco,
   Exercicio,
   Habito,
@@ -13,9 +16,12 @@ import type {
   Medida,
   ModeloTreino,
   NotaLivro,
+  RegistroLazer,
   SessaoEstudo,
   Semana,
   Serie,
+  Tentativa,
+  TipoLazer,
   Treino,
 } from './tipos'
 
@@ -42,6 +48,13 @@ export const db = new Dexie('evolui') as Dexie & {
   livros: EntityTable<Livro, 'id'>
   leituras: EntityTable<Leitura, 'id'>
   notasLivro: EntityTable<NotaLivro, 'id'>
+  // Fase 3
+  desafios: EntityTable<Desafio, 'id'>
+  tentativas: EntityTable<Tentativa, 'id'>
+  dicas: EntityTable<Dica, 'id'>
+  evidencias: EntityTable<Evidencia, 'id'>
+  lazerTipos: EntityTable<TipoLazer, 'id'>
+  lazerRegistros: EntityTable<RegistroLazer, 'id'>
 }
 
 // Cada número de versão descreve as tabelas e os campos que podem ser buscados rápido (índices).
@@ -71,7 +84,17 @@ db.version(2).stores({
   notasLivro: 'id, livroId',
 })
 
-export const VERSAO_BANCO = 2
+// Versão 3 (Fase 3): comunicação, mente e lazer.
+db.version(3).stores({
+  desafios: 'id, ordem',
+  tentativas: 'id, semana, dia',
+  dicas: 'id, ordem',
+  evidencias: 'id, dia',
+  lazerTipos: 'id, ordem',
+  lazerRegistros: 'id, tipoId, dia',
+})
+
+export const VERSAO_BANCO = 3
 
 /** Tira da lista os registros marcados como apagados. */
 export function vivos<T extends { apagadoEm?: number }>(lista: T[]): T[] {

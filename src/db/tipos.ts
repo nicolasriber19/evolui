@@ -83,19 +83,32 @@ export interface ItemLista {
   feita: boolean
 }
 
-/** Um registro por dia: check-in, prioridades e vitórias. */
+/** Um registro por dia: check-in, prioridades, vitórias e o diário curto. */
 export interface Dia extends Base {
   id: DiaISO
   energia?: number
   humor?: number
   prioridades: ItemLista[]
   vitorias: string[]
+  /** Fase 3 (Mente): uma coisa boa pela qual você é grato hoje. */
+  gratidao?: string
+  /** Fase 3 (Mente): uma coisa que você fez bem hoje. */
+  fizBem?: string
 }
 
-/** Um registro por semana: as 3 metas (e, na Fase 4, as respostas da revisão). */
+/** O desafio de conversa sorteado para a semana. */
+export interface DesafioDaSemana {
+  desafioId: string
+  /** Cópia do texto, para o histórico não mudar se você editar a lista depois. */
+  texto: string
+  sorteadoEm: number
+}
+
+/** Um registro por semana: as 3 metas, o desafio de conversa (e, na Fase 4, a revisão). */
 export interface Semana extends Base {
   id: SemanaISO
   metas: ItemLista[]
+  desafio?: DesafioDaSemana
 }
 
 // ---------- Fase 2: Corpo ----------
@@ -208,4 +221,55 @@ export interface NotaLivro extends Base {
   tipo: 'nota' | 'trecho'
   texto: string
   pagina?: number
+}
+
+// ---------- Fase 3: Comunicação ----------
+
+/** Um desafio da lista (editável) de onde sai o sorteio da semana. */
+export interface Desafio extends Base {
+  texto: string
+  ordem: number
+}
+
+/** Cada vez que você tentou o desafio da semana. */
+export interface Tentativa extends Base {
+  semana: SemanaISO
+  dia: DiaISO
+  desafioTexto: string
+  /** 1 = travei, 5 = fluiu. */
+  comoFoi: number
+  relato: string
+  aprendi: string
+}
+
+export interface Dica extends Base {
+  texto: string
+  ordem: number
+}
+
+// ---------- Fase 3: Mente ----------
+
+/** Uma conquista guardada para reler nos dias ruins. */
+export interface Evidencia extends Base {
+  dia: DiaISO
+  texto: string
+  areaId?: AreaId
+}
+
+// ---------- Fase 3: Lazer ----------
+
+export interface TipoLazer extends Base {
+  nome: string
+  /** Quanto tempo por semana você escolheu gastar com isso. */
+  orcamentoMin: number
+  ativo: boolean
+  ordem: number
+}
+
+export interface RegistroLazer extends Base {
+  tipoId: string
+  dia: DiaISO
+  minutos: number
+  /** true = você escolheu; false = foi no automático. */
+  escolhido: boolean
 }

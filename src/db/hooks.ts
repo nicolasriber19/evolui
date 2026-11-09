@@ -78,6 +78,40 @@ export function useNotasLivro(livroId: string) {
   return useLiveQuery(async () => vivos(await db.notasLivro.where('livroId').equals(livroId).toArray()), [livroId])
 }
 
+// ---------- Fase 3 ----------
+
+export function useDesafios() {
+  return useLiveQuery(async () => vivos(await db.desafios.orderBy('ordem').toArray()))
+}
+
+export function useTentativas() {
+  return useLiveQuery(async () => vivos(await db.tentativas.orderBy('dia').toArray()))
+}
+
+export function useDicas() {
+  return useLiveQuery(async () => vivos(await db.dicas.orderBy('ordem').toArray()))
+}
+
+export function useEvidencias() {
+  return useLiveQuery(async () => vivos(await db.evidencias.orderBy('dia').toArray()))
+}
+
+export function useTiposLazer() {
+  return useLiveQuery(async () => vivos(await db.lazerTipos.orderBy('ordem').toArray()))
+}
+
+export function useRegistrosLazer() {
+  return useLiveQuery(async () => vivos(await db.lazerRegistros.orderBy('dia').toArray()))
+}
+
+export function useTodosDias() {
+  return useLiveQuery(async () => vivos(await db.dias.toArray()))
+}
+
+export function useTodasSemanas() {
+  return useLiveQuery(async () => vivos(await db.semanas.toArray()))
+}
+
 /**
  * A hora atual, atualizada a cada minuto e sempre que o app volta para a tela.
  * Serve para o dia virar sozinho se o app ficar aberto de madrugada.
