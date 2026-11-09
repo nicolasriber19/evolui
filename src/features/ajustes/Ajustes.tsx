@@ -234,7 +234,7 @@ function SecaoApp() {
           Para instalar: no Chrome do celular, abra o menu (três pontinhos) e toque em “Adicionar à tela inicial”.
         </p>
       )}
-      <p className="mt-3 text-xs text-tinta-suave">Versão 0.4 (Fase 4)</p>
+      <p className="mt-3 text-xs text-tinta-suave">Versão 1.0</p>
     </Cartao>
   )
 }

@@ -12,6 +12,7 @@ npm test             # roda os testes da lógica (Vitest)
 npm run build        # confere os tipos (tsc) e gera o site final em dist/
 npm run preview      # serve o dist/ em http://localhost:4173 (é onde o modo offline/PWA funciona)
 npm run icones       # gera os ícones PNG a partir de public/logo.svg
+npm run publicar     # testes + build + publica na Vercel (guia completo em PUBLICAR.md)
 ```
 
 Sempre rode `npm test` e `npm run build` sem erros antes de dar uma fase por terminada.
@@ -50,7 +51,8 @@ src/
   lib/                    lógica pura e testável: datas.ts (dia lógico), corrente.ts (regra), id.ts, areas.ts,
                           foco.ts (timer), treino.ts (rotação, última vez, evolução), leitura.ts, formatar.ts,
                           fase3.ts (sorteio do desafio, orçamento de lazer, promessas cumpridas),
-                          xp.ts (XP e níveis), revisao.ts (resumo da semana, mapa de calor, humorMedio)
+                          xp.ts (XP e níveis), revisao.ts (resumo da semana, mapa de calor, humorMedio),
+                          lembretes.ts (eventos repetidos para a agenda: link do Google Agenda e arquivo .ics)
   data/sugestoes.ts       frases, hábitos e metas prontos do onboarding
   data/treinos.ts         modelos A/B/C sugeridos (ganhar massa, seg a sex) e matérias da faculdade
   data/comunicacao.ts     desafios, dicas de conversa e orçamento de lazer sugeridos
@@ -100,6 +102,13 @@ src/
   a tela Hoje mostra uma evidência (a mesma o dia todo).
 - **Lazer**: orçamento semanal em minutos por tipo; cada registro diz se foi escolha ou piloto automático.
   Passar do orçamento não pinta nada de vermelho: só diz quanto passou e que segunda recomeça.
+- **Lembretes** (Fase 5): PWA sem servidor não avisa com o app fechado, então os lembretes viram eventos repetidos
+  com alarme na agenda do celular: link "Adicionar ao Google Agenda" (um por lembrete, com RRULE e fuso de Brasília)
+  ou um .ics com todos. Ficam em `config.lembretes` (padrão em `lembretesPadrao()`, todos desligados).
+  O timer de foco continua usando notificação do service worker quando o app está em segundo plano.
+- **Acessibilidade**: auditoria com axe-core (Playwright) em todas as telas, nos dois temas, sem nenhum problema.
+  Regras: nome do botão = texto visível (dicas extras em `sr-only`); gráficos visuais ficam `aria-hidden` com
+  tabela/figcaption escondida; Recharts com `accessibilityLayer={false}`.
 - Compatível com Capacitor no futuro (não criar APK agora).
 
 ## Design (adaptado da skill scroll-desing)
@@ -134,7 +143,8 @@ src/
    evidências, promessas cumpridas; orçamento de lazer. Banco na versão 3 (testado que a 2 sobe sem perder dados).
 4. **Revisão e Evolução** (feito e publicado em 09/11/2026): "Sua semana" com narrativa de rolagem, painel com níveis,
    votos por dia/área (semana ou 30 dias), humor, mapa de calor de 16 semanas, revisões anteriores; XP e níveis.
-5. Polimento, lembretes via arquivo .ics para a agenda, revisão de acessibilidade.
+5. **Polimento** (feito e publicado em 09/11/2026, versão 1.0): lembretes pela agenda, transição entre telas, check que
+   pula, pílula na aba ativa, auditoria de acessibilidade, PUBLICAR.md + `npm run publicar`, README.md.
 
 ## Como trabalhar com o Nicolas
 
@@ -146,4 +156,5 @@ src/
   Tarefa da Fase 3: reescrever desafios e dicas em `src/data/comunicacao.ts` com situações da vida dele.
   Tarefa da Fase 4: implementar `humorMedio` em `src/lib/revisao.ts` e os `it.todo` de `revisao.test.ts`
   (enquanto devolver null, a revisão mostra a linha do humor sem a média).
+  Tarefa da Fase 5: publicar uma atualização sozinho com `npm run publicar`, seguindo PUBLICAR.md.
 - Um commit por etapa, mensagens claras em português.
