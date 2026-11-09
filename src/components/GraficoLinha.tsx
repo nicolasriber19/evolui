@@ -11,6 +11,8 @@ interface Props {
   unidade: string
   /** O que o gráfico mostra (vai para a tabela escondida dos leitores de tela). */
   descricao: string
+  /** Marcas fixas do eixo (ex.: [1, 2, 3, 4, 5] para humor). Sem isso, são calculadas pelos dados. */
+  marcasFixas?: number[]
 }
 
 /** Marcas "limpas" no eixo (35, 40, 45...) com uma folga em cima e embaixo dos dados. */
@@ -51,8 +53,8 @@ function Dica({ active, payload, label, unidade }: PropsDica) {
  * Este arquivo carrega a biblioteca Recharts, que é pesada, por isso ele só é baixado
  * quando a tela que usa o gráfico é aberta (veja o React.lazy em quem importa).
  */
-export default function GraficoLinha({ dados, unidade, descricao }: Props) {
-  const marcas = marcasDoEixo(dados.map((d) => d.valor))
+export default function GraficoLinha({ dados, unidade, descricao, marcasFixas }: Props) {
+  const marcas = marcasFixas ?? marcasDoEixo(dados.map((d) => d.valor))
   return (
     <>
       <div className="h-52 w-full" aria-hidden="true">

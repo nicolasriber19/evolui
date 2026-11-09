@@ -5,7 +5,6 @@ import { useConfig } from './db/hooks'
 import { Ajustes } from './features/ajustes/Ajustes'
 import { temaSalvo, useTema } from './features/ajustes/tema'
 import { Areas } from './features/areas/Areas'
-import { Evolucao } from './features/evolucao/Evolucao'
 import { Hoje } from './features/hoje/Hoje'
 import { Onboarding } from './features/onboarding/Onboarding'
 import { AvisoAtualizacao } from './features/pwa/AvisoAtualizacao'
@@ -19,6 +18,7 @@ const Comunicacao = lazy(() => import('./features/comunicacao/Comunicacao').then
 const Mente = lazy(() => import('./features/mente/Mente').then((m) => ({ default: m.Mente })))
 const Lazer = lazy(() => import('./features/lazer/Lazer').then((m) => ({ default: m.Lazer })))
 const Revisao = lazy(() => import('./features/revisao/Revisao').then((m) => ({ default: m.Revisao })))
+const Evolucao = lazy(() => import('./features/evolucao/Evolucao').then((m) => ({ default: m.Evolucao })))
 const LivroDetalhe = lazy(() => import('./features/leitura/LivroDetalhe').then((m) => ({ default: m.LivroDetalhe })))
 
 export default function App() {

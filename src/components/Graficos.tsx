@@ -33,6 +33,56 @@ export function BarrasHorizontais({ itens, descricao }: { itens: ItemBarra[]; de
   )
 }
 
+/** Colunas para qualquer período (7 ou 30 dias). Os rótulos aparecem só onde `mostrarRotulo` deixar. */
+export function ColunasPeriodo({
+  valores,
+  rotulos,
+  formatar,
+  descricao,
+  mostrarRotulo = () => true,
+}: {
+  valores: number[]
+  rotulos: string[]
+  formatar: (v: number) => string
+  descricao: string
+  mostrarRotulo?: (i: number) => boolean
+}) {
+  const max = Math.max(...valores, 1)
+  const colunas = { gridTemplateColumns: `repeat(${valores.length}, minmax(0, 1fr))` }
+  const indiceMax = valores.indexOf(Math.max(...valores))
+  return (
+    <figure>
+      <figcaption className="sr-only">
+        {descricao}: {valores.map((v, i) => `${rotulos[i]} ${formatar(v)}`).join(', ')}
+      </figcaption>
+      <div className="grid h-28 items-end gap-[3px] border-b border-linha-forte pt-5" style={colunas} aria-hidden="true">
+        {valores.map((v, i) => (
+          <div key={i} className="flex h-full flex-col justify-end" title={`${rotulos[i]}: ${formatar(v)}`}>
+            {/* O número fica flutuando acima da barra, sem tirar altura dela. */}
+            <div
+              className="relative mx-auto w-full max-w-6 rounded-t-[4px] bg-grafico"
+              style={{ height: `${(v / max) * 100}%`, minHeight: v > 0 ? 3 : 0 }}
+            >
+              {i === indiceMax && v > 0 && (
+                <span className="absolute bottom-full left-1/2 mb-1 -translate-x-1/2 text-[11px] whitespace-nowrap text-tinta tabular-nums">
+                  {formatar(v)}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-1 grid gap-[3px] text-center text-[10px] text-tinta-suave" style={colunas} aria-hidden="true">
+        {rotulos.map((r, i) => (
+          <span key={i} className="overflow-visible whitespace-nowrap">
+            {mostrarRotulo(i) ? r : ''}
+          </span>
+        ))}
+      </div>
+    </figure>
+  )
+}
+
 interface PropsColunas {
   valores: number[]
   rotulos: string[]
@@ -50,14 +100,19 @@ export function ColunasSemana({ valores, rotulos, indiceHoje, formatar, descrica
       <figcaption className="sr-only">
         {descricao}: {valores.map((v, i) => `${rotulos[i]} ${formatar(v)}`).join(', ')}
       </figcaption>
-      <div className="grid h-24 grid-cols-7 items-end gap-2 border-b border-linha-forte" aria-hidden="true">
+      <div className="grid h-28 grid-cols-7 items-end gap-2 border-b border-linha-forte pt-5" aria-hidden="true">
         {valores.map((v, i) => (
           <div key={i} className="flex h-full flex-col justify-end" title={`${rotulos[i]}: ${formatar(v)}`}>
-            {i === indiceHoje && v > 0 && <span className="mb-1 text-center text-[11px] text-tinta tabular-nums">{formatar(v)}</span>}
             <div
-              className="mx-auto w-full max-w-6 rounded-t-[4px] bg-grafico"
+              className="relative mx-auto w-full max-w-6 rounded-t-[4px] bg-grafico"
               style={{ height: `${(v / max) * 100}%`, minHeight: v > 0 ? 3 : 0 }}
-            />
+            >
+              {i === indiceHoje && v > 0 && (
+                <span className="absolute bottom-full left-1/2 mb-1 -translate-x-1/2 text-[11px] whitespace-nowrap text-tinta tabular-nums">
+                  {formatar(v)}
+                </span>
+              )}
+            </div>
           </div>
         ))}
       </div>

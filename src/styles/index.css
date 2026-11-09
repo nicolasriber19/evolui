@@ -24,6 +24,11 @@
   --veu: rgb(2 6 16 / 0.62);
   --perigo: #ff7a7a;
   --grafico: #f0b44c;
+  /* Mapa de calor: 4 tons do mesmo âmbar, validados (claro para escuro, contraste mínimo 2:1 com o cartão). */
+  --mapa-1: #755f3c;
+  --mapa-2: #9d7b41;
+  --mapa-3: #c89847;
+  --mapa-4: #f0b44c;
 
   --area-corpo: #f08a5d;
   --area-estudo: #5b9cf5;
@@ -49,6 +54,10 @@
   --veu: rgb(15 26 46 / 0.4);
   --perigo: #c62828;
   --grafico: #b7791f;
+  --mapa-1: #cc9f5c;
+  --mapa-2: #b7791f;
+  --mapa-3: #946013;
+  --mapa-4: #6e470c;
 
   --area-corpo: #d2643a;
   --area-estudo: #2f74d6;
@@ -72,6 +81,10 @@
   --color-linha-forte: var(--linha-forte);
   --color-perigo: var(--perigo);
   --color-grafico: var(--grafico);
+  --color-mapa-1: var(--mapa-1);
+  --color-mapa-2: var(--mapa-2);
+  --color-mapa-3: var(--mapa-3);
+  --color-mapa-4: var(--mapa-4);
 
   --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
