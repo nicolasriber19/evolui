@@ -23,6 +23,7 @@
   --sombra: inset 0 1px 0 rgb(255 255 255 / 0.03), 0 10px 24px -14px rgb(2 6 16 / 0.7);
   --veu: rgb(2 6 16 / 0.62);
   --perigo: #ff7a7a;
+  --grafico: #f0b44c;
 
   --area-corpo: #f08a5d;
   --area-estudo: #5b9cf5;
@@ -47,6 +48,7 @@
   --sombra: 0 1px 2px rgb(15 26 46 / 0.06), 0 10px 24px -16px rgb(15 26 46 / 0.25);
   --veu: rgb(15 26 46 / 0.4);
   --perigo: #c62828;
+  --grafico: #b7791f;
 
   --area-corpo: #d2643a;
   --area-estudo: #2f74d6;
@@ -69,6 +71,7 @@
   --color-linha: var(--linha);
   --color-linha-forte: var(--linha-forte);
   --color-perigo: var(--perigo);
+  --color-grafico: var(--grafico);
 
   --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;

@@ -38,3 +38,8 @@ export function formatarRelogio(ms: number): string {
 export function formatarMinutos(minutos: number): string {
   return `${minutos} min`
 }
+
+/** Número para colocar dentro de um campo de digitação: 42.5 vira "42,5" (sem separador de milhar). */
+export function numeroParaCampo(n: number | undefined): string {
+  return n === undefined ? '' : String(n).replace('.', ',')
+}

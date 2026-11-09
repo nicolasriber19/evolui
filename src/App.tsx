@@ -4,6 +4,7 @@ import { useConfig } from './db/hooks'
 import { Ajustes } from './features/ajustes/Ajustes'
 import { temaSalvo, useTema } from './features/ajustes/tema'
 import { Areas } from './features/areas/Areas'
+import { Corpo } from './features/corpo/Corpo'
 import { Evolucao } from './features/evolucao/Evolucao'
 import { Hoje } from './features/hoje/Hoje'
 import { Onboarding } from './features/onboarding/Onboarding'
@@ -32,6 +33,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route index element={<Hoje config={config} />} />
           <Route path="areas" element={<Areas config={config} />} />
+          <Route path="areas/corpo" element={<Corpo config={config} />} />
           <Route path="evolucao" element={<Evolucao config={config} />} />
           <Route path="ajustes" element={<Ajustes config={config} />} />
         </Route>
