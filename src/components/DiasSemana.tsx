@@ -30,7 +30,7 @@ export function DiasSemana({ dias, onMudar }: Props) {
             aria-label={d.nome}
             onClick={() => alternar(d.n)}
             className={`h-10 flex-1 rounded-lg text-xs font-medium transition-[transform,background-color,color] duration-150 ease-saida active:scale-[0.94] ${
-              ativo ? 'bg-destaque text-destaque-tinta' : 'bg-cartao-2 text-tinta-suave'
+              ativo ? 'bg-destaque/15 text-destaque-texto ring-1 ring-destaque/45 ring-inset' : 'bg-cartao-2 text-tinta-suave'
             }`}
           >
             {d.curto}

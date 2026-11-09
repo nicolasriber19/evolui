@@ -12,7 +12,9 @@ const ABAS = [
 /** Moldura das telas principais: conteúdo no meio e a barra de abas embaixo. */
 export function Layout() {
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  useEffect(() => {
+    window.scrollTo(0, 0) // chaves de propósito: o efeito não pode devolver nada além de uma função
+  }, [pathname])
 
   return (
     <>
