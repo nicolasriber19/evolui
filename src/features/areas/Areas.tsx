@@ -3,16 +3,38 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { Cartao } from '../../components/Cartao'
 import { IconeArea } from '../../components/IconeArea'
-import { useAgora, useAreas, useChecks, useHabitos, useLeituras, useLivros, useSessoes, useTreinos } from '../../db/hooks'
+import {
+  useAgora,
+  useAreas,
+  useChecks,
+  useHabitos,
+  useLeituras,
+  useLivros,
+  useRegistrosLazer,
+  useSessoes,
+  useTentativas,
+  useTiposLazer,
+  useTodasSemanas,
+  useTodosDias,
+  useTreinos,
+} from '../../db/hooks'
+import { contarPromessas, usoDaSemana } from '../../lib/fase3'
 import type { AreaId, Config } from '../../db/tipos'
 import { INFO_AREAS } from '../../lib/areas'
 import { calcularCorrente } from '../../lib/corrente'
-import { diaLogico, diasDaSemana } from '../../lib/datas'
+import { diaLogico, diasDaSemana, semanaISO } from '../../lib/datas'
 import { feitosPorHabito } from '../../lib/votos'
 import { formatarMinutos } from '../../lib/formatar'
 
 /** Áreas que já têm tela própria. */
-const COM_TELA: Partial<Record<AreaId, string>> = { corpo: '/areas/corpo', estudo: '/areas/estudo', leitura: '/areas/leitura' }
+const COM_TELA: Record<AreaId, string> = {
+  corpo: '/areas/corpo',
+  estudo: '/areas/estudo',
+  leitura: '/areas/leitura',
+  comunicacao: '/areas/comunicacao',
+  mente: '/areas/mente',
+  lazer: '/areas/lazer',
+}
 
 /** Cada área ativa: a frase, os votos e como cada hábito está indo. */
 export function Areas({ config }: { config: Config }) {
@@ -24,8 +46,17 @@ export function Areas({ config }: { config: Config }) {
   const sessoes = useSessoes()
   const leituras = useLeituras()
   const livros = useLivros()
+  const semanas = useTodasSemanas()
+  const tentativas = useTentativas()
+  const todosDias = useTodosDias()
+  const tiposLazer = useTiposLazer()
+  const registrosLazer = useRegistrosLazer()
 
-  if (!areas || !habitos || !checks || !treinos || !sessoes || !leituras || !livros) return null
+  if (
+    !areas || !habitos || !checks || !treinos || !sessoes || !leituras || !livros ||
+    !semanas || !tentativas || !todosDias || !tiposLazer || !registrosLazer
+  )
+    return null
 
   const ativas = areas.filter((a) => a.ativa)
   const desligadas = areas.filter((a) => !a.ativa)
@@ -46,6 +77,23 @@ export function Areas({ config }: { config: Config }) {
       const pag = leituras!.filter((l) => semana.has(l.dia)).reduce((soma, l) => soma + l.paginas, 0)
       const lendo = livros!.find((l) => l.status === 'lendo')
       return `${pag} ${pag === 1 ? 'página' : 'páginas'} esta semana${lendo ? ` · lendo ${lendo.titulo}` : ''}`
+    }
+    if (area === 'comunicacao') {
+      const desafio = semanas!.find((s) => s.id === semanaISO(hoje))?.desafio
+      if (!desafio) return 'Desafio da semana ainda não sorteado'
+      const n = tentativas!.filter((t) => t.semana === semanaISO(hoje)).length
+      return `Desafio: ${desafio.texto} · ${n} ${n === 1 ? 'tentativa' : 'tentativas'}`
+    }
+    if (area === 'mente') {
+      const n = contarPromessas({ checks: checks!, dias: todosDias!, semanas: semanas!, tentativas: tentativas! }, [...semana]).total
+      return `${n} ${n === 1 ? 'promessa cumprida' : 'promessas cumpridas'} esta semana`
+    }
+    if (area === 'lazer') {
+      const ativos = tiposLazer!.filter((t) => t.ativo)
+      if (ativos.length === 0) return 'Orçamento de lazer ainda não definido'
+      const usado = usoDaSemana(ativos, registrosLazer!, [...semana]).reduce((s, u) => s + u.usado, 0)
+      const total = ativos.reduce((s, t) => s + t.orcamentoMin, 0)
+      return `${formatarMinutos(usado)} de ${formatarMinutos(total)} de lazer esta semana`
     }
     return null
   }
@@ -111,7 +159,6 @@ export function Areas({ config }: { config: Config }) {
           </Link>
         </p>
       )}
-      <p className="px-1 pt-2 text-xs text-tinta-suave">Comunicação, Mente e Lazer ganham telas próprias na próxima fase.</p>
     </div>
   )
 }

@@ -11,6 +11,7 @@ import { diaLogico, diaPorExtenso, diasDaSemana, ehNoite, numeroDoDia, semanaISO
 import { feitosPorHabito, votosPorDia } from '../../lib/votos'
 import { AvisoBackup } from './AvisoBackup'
 import { CheckIn } from './CheckIn'
+import { DesafioDaSemanaNaHoje, EvidenciaDoDiaDificil } from './CartoesFase3'
 import { HabitoLinha } from './HabitoLinha'
 import { Identidade } from './Identidade'
 import { Vitorias } from './Vitorias'
@@ -103,6 +104,7 @@ export function Hoje({ config }: { config: Config }) {
       {/* À noite, as vitórias sobem para o topo. */}
       {noite && vitorias}
       {!noite && checkIn}
+      <EvidenciaDoDiaDificil dia={dia} hoje={hoje} />
 
       <Cartao
         titulo="Hábitos de hoje"
@@ -164,6 +166,8 @@ export function Hoje({ config }: { config: Config }) {
           mensagemLimite="Três metas por semana. No domingo você escolhe as próximas."
         />
       </Cartao>
+
+      {idsAtivas.has('comunicacao') && <DesafioDaSemanaNaHoje semana={semana} />}
 
       {!noite &&
         (vitorias ?? (
