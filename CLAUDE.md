@@ -44,17 +44,19 @@ src/
   main.tsx, App.tsx       entrada, rotas e barra de abas
   styles/index.css        Tailwind + tokens de cor dos temas (data-tema="escuro" | "claro" no <html>)
   db/                     tipos.ts (formato das tabelas), db.ts (Dexie, versões 1 e 2), acoes.ts (gravações da Fase 1),
-                          acoesCorpo.ts, acoesEstudo.ts, acoesLeitura.ts (gravações da Fase 2), acoesFase3.ts,
+                          acoesCorpo.ts, acoesEstudo.ts, acoesLeitura.ts (gravações da Fase 2), acoesFase3.ts, acoesFase4.ts,
+                          hooksAgregados.ts (useDadosCompletos: tudo de uma vez, para revisão/Evolução/XP),
                           hooks.ts (leituras reativas com useLiveQuery), backup.ts (exportar/importar JSON)
   lib/                    lógica pura e testável: datas.ts (dia lógico), corrente.ts (regra), id.ts, areas.ts,
                           foco.ts (timer), treino.ts (rotação, última vez, evolução), leitura.ts, formatar.ts,
-                          fase3.ts (sorteio do desafio, orçamento de lazer, promessas cumpridas)
+                          fase3.ts (sorteio do desafio, orçamento de lazer, promessas cumpridas),
+                          xp.ts (XP e níveis), revisao.ts (resumo da semana, mapa de calor, humorMedio)
   data/sugestoes.ts       frases, hábitos e metas prontos do onboarding
   data/treinos.ts         modelos A/B/C sugeridos (ganhar massa, seg a sex) e matérias da faculdade
   data/comunicacao.ts     desafios, dicas de conversa e orçamento de lazer sugeridos
   components/             peças reutilizáveis (Botao, Cartao, Escala, ListaCurta, Folha, DiasSemana...)
   features/<parte>/       uma pasta por parte do app (onboarding, hoje, areas, corpo, estudo, leitura,
-                          comunicacao, mente, lazer, evolucao, ajustes, pwa)
+                          comunicacao, mente, lazer, revisao, evolucao, ajustes, pwa)
 ```
 
 ## Decisões do projeto (não mudar sem conversar)
@@ -85,6 +87,11 @@ src/
   Notificação só com o app em segundo plano (via service worker); com o app aberto, bipe + vibração.
 - **Treino**: série só existe quando marcada como feita (id fixo `treino:exercício:ordem`), então fechar o app não perde nada.
   A carga sugerida vem da última vez que o exercício foi feito. Modelos sugeridos só são criados se você tocar no botão.
+- **XP e níveis** (`lib/xp.ts`): calculados, nunca guardados nem perdidos. Nível n começa em 50·n·(n−1) XP.
+  `config.niveisVistos` guarda o último nível visto por área: a tela Hoje avisa quando sobe; a Evolução marca como visto.
+- **Revisão**: respostas em `semanas[semana].revisao`; o foco e as metas escolhidos vão para a semana SEGUINTE
+  (`semanas[proxima].foco/metas`) e aparecem na tela Hoje. Domingo a Hoje chama para revisar; segunda, se a semana
+  passada teve atividade e não foi revisada, oferece revisar ela.
 - **SugestaoDeVoto**: depois de registrar treino, foco, leitura ou tentativa de conversa, oferece marcar o hábito pendente da área.
 - **Comunicação**: o desafio sorteado fica em `semanas.desafio` (cópia do texto); sorteio evita as últimas 4 semanas;
   depois da primeira tentativa não dá mais para sortear outro. Tentativas guardam como foi (1 a 5), relato e aprendizado.
@@ -106,7 +113,13 @@ src/
   Sempre respeitar `prefers-reduced-motion`.
 - Proibido: gradiente em texto, brilho neon, emoji como ícone, travessão (—) em texto do app,
   números inventados (sem dado = estado vazio convidativo).
-- Pico emocional planejado: revisão de domingo "Sua semana" (Fase 4), única parte com narrativa de rolagem.
+- Pico emocional: a revisão "Sua semana" (`features/revisao`, rota `/revisao/:semana?`, fora do Layout, sem abas).
+  Curva: calma, orgulho (pico: palco de 260dvh com os 7 dias se acendendo), confiança (números), equilíbrio (lazer),
+  intimidade (linha do humor se desenhando), reflexão (3 perguntas), decisão (metas) e fechamento parado
+  "A semana N começa assim.". Animações com CSS `animation-timeline: view()` / `--palco` (classes `rv-*` no index.css);
+  sem suporte ou com "reduzir movimento", tudo aparece pronto. Proibido: dica "role para baixo", contador 01/06.
+- Mapa de calor: tokens `--mapa-1..4` (4 tons do mesmo âmbar, validados com a skill dataviz em --ordinal nos dois temas);
+  `cartao-2` = nada feito; tracejado = dia sem hábito; vazio = antes de começar ou futuro.
 
 ## Fases
 
@@ -119,7 +132,8 @@ src/
    Banco na versão 2 (testado que a versão 1 sobe sem perder dados).
 3. **Comunicação, Mente, Lazer** (feito e publicado em 09/11/2026): desafio sorteado, tentativas, dicas; diário curto,
    evidências, promessas cumpridas; orçamento de lazer. Banco na versão 3 (testado que a 2 sobe sem perder dados).
-4. Revisão semanal, painel de Evolução (Recharts), heatmap, XP e níveis.
+4. **Revisão e Evolução** (feito e publicado em 09/11/2026): "Sua semana" com narrativa de rolagem, painel com níveis,
+   votos por dia/área (semana ou 30 dias), humor, mapa de calor de 16 semanas, revisões anteriores; XP e níveis.
 5. Polimento, lembretes via arquivo .ics para a agenda, revisão de acessibilidade.
 
 ## Como trabalhar com o Nicolas
@@ -130,4 +144,6 @@ src/
   Tarefas da Fase 1: personalizar `src/data/sugestoes.ts`; escrever o teste `it.todo` em `src/lib/corrente.test.ts`.
   Tarefa da Fase 2: implementar `formatarMinutos` em `src/lib/formatar.ts` e os testes `it.todo` de `formatar.test.ts`.
   Tarefa da Fase 3: reescrever desafios e dicas em `src/data/comunicacao.ts` com situações da vida dele.
+  Tarefa da Fase 4: implementar `humorMedio` em `src/lib/revisao.ts` e os `it.todo` de `revisao.test.ts`
+  (enquanto devolver null, a revisão mostra a linha do humor sem a média).
 - Um commit por etapa, mensagens claras em português.
