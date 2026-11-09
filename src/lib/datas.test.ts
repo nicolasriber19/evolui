@@ -44,5 +44,7 @@ describe('datas', () => {
     expect(descreverDias([1, 2, 3, 4, 5])).toBe('seg a sex')
     expect(descreverDias([1, 3, 5])).toBe('seg, qua, sex')
     expect(descreverDias([0, 6])).toBe('fim de semana')
+    expect(descreverDias([1, 2, 3, 4, 5, 6])).toBe('seg a sáb')
+    expect(descreverDias([1, 3, 4, 5])).toBe('seg, qua, qui, sex')
   })
 })

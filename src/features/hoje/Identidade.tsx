@@ -30,16 +30,16 @@ export function Identidade({ area, dias, hoje, votos, recentes, alvoRef, onTroca
         onClick={onTrocar}
         disabled={!onTrocar}
         aria-label={onTrocar ? `${area.frase}. Toque para ver outra identidade` : undefined}
-        className="block w-full text-left disabled:cursor-default"
+        className="flex min-h-[6.25rem] w-full flex-col justify-end text-left disabled:cursor-default"
       >
         <span key={`r-${area.id}`} className="troca-frase flex items-center gap-1.5 text-xs text-tinta-suave">
           <IconeArea area={area.id} className="size-3.5" />
           {INFO_AREAS[area.id].nome}
         </span>
-        {/* Altura mínima de 2 linhas: trocar de frase não empurra o resto da tela. */}
+        {/* O botão tem altura mínima de 2 linhas de frase: trocar de frase não empurra o resto da tela. */}
         <span
           key={area.id}
-          className={`troca-frase mt-1.5 block min-h-[4.5rem] font-display leading-[1.04] font-medium tracking-[-0.025em] ${
+          className={`troca-frase mt-1.5 block font-display leading-[1.04] font-medium tracking-[-0.025em] ${
             fraseLonga ? 'text-[1.7rem]' : 'text-[2.15rem]'
           }`}
         >

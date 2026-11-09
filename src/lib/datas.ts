@@ -72,11 +72,14 @@ const NOMES_CURTOS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']
 export function descreverDias(dias: number[]): string {
   const set = new Set(dias)
   if (set.size === 7) return 'todo dia'
-  if (set.size === 5 && [1, 2, 3, 4, 5].every((d) => set.has(d))) return 'seg a sex'
-  if (set.size === 2 && set.has(0) && set.has(6)) return 'fim de semana'
   if (set.size === 0) return 'nenhum dia'
-  return [1, 2, 3, 4, 5, 6, 0]
-    .filter((d) => set.has(d))
-    .map((d) => NOMES_CURTOS[d])
-    .join(', ')
+  if (set.size === 2 && set.has(0) && set.has(6)) return 'fim de semana'
+  // Semana começando na segunda: posições 0 (seg) a 6 (dom).
+  const ordem = [1, 2, 3, 4, 5, 6, 0]
+  const posicoes = ordem.map((d, i) => (set.has(d) ? i : -1)).filter((i) => i >= 0)
+  const seguidos = posicoes.every((p, i) => i === 0 || p === posicoes[i - 1] + 1)
+  if (seguidos && posicoes.length >= 3) {
+    return `${NOMES_CURTOS[ordem[posicoes[0]]]} a ${NOMES_CURTOS[ordem[posicoes[posicoes.length - 1]]]}`
+  }
+  return posicoes.map((p) => NOMES_CURTOS[ordem[p]]).join(', ')
 }
