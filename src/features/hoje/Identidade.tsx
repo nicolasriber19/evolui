@@ -29,9 +29,10 @@ export function Identidade({ area, dias, hoje, votos, recentes, alvoRef, onTroca
         type="button"
         onClick={onTrocar}
         disabled={!onTrocar}
-        aria-label={onTrocar ? `${area.frase}. Toque para ver outra identidade` : undefined}
         className="flex min-h-[6.25rem] w-full flex-col justify-end text-left disabled:cursor-default"
       >
+        {/* O nome do botão é o próprio texto visível + esta dica escondida (quem usa voz fala o que vê). */}
+        {onTrocar && <span className="sr-only">Toque para ver outra identidade:</span>}
         <span key={`r-${area.id}`} className="troca-frase flex items-center gap-1.5 text-xs text-tinta-suave">
           <IconeArea area={area.id} className="size-3.5" />
           {INFO_AREAS[area.id].nome}

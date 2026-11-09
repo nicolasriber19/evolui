@@ -59,7 +59,8 @@ export default function GraficoLinha({ dados, unidade, descricao, marcasFixas }:
     <>
       <div className="h-52 w-full" aria-hidden="true">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={dados} margin={{ top: 12, right: 12, bottom: 0, left: 0 }}>
+          {/* accessibilityLayer desligado: quem usa leitor de tela lê a tabela escondida logo abaixo. */}
+          <LineChart data={dados} margin={{ top: 12, right: 12, bottom: 0, left: 0 }} accessibilityLayer={false}>
             <CartesianGrid vertical={false} stroke="var(--linha)" />
             <XAxis
               dataKey="rotulo"

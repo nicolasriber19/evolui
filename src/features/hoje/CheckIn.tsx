@@ -16,10 +16,11 @@ export function CheckIn({ dia, hoje }: { dia: Dia | null; hoje: DiaISO }) {
       <button
         type="button"
         onClick={() => setEditando(true)}
-        aria-label={`Check-in: energia ${dia.energia}, humor ${dia.humor}. Toque para mudar`}
         className="flex min-h-12 w-full items-center gap-3 rounded-2xl border border-linha bg-cartao px-4 text-left text-sm transition-transform duration-150 ease-saida active:scale-[0.985]"
       >
-        <span className="flex-1 text-tinta-suave">Check-in</span>
+        <span className="flex-1 text-tinta-suave">
+          Check-in<span className="sr-only"> (toque para mudar)</span>
+        </span>
         <span className="tabular-nums">
           Energia <span className="font-medium">{dia.energia}</span>
           <span className="mx-2 text-tinta-suave">·</span>
