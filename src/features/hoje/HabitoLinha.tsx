@@ -46,7 +46,7 @@ export function HabitoLinha({ habito, check, resultado, onMarcar }: Props) {
               : 'border-tinta-suave/60 text-transparent'
         }`}
       >
-        <IconeCheck className="size-5" strokeWidth={2.75} aria-hidden="true" />
+        <IconeCheck key={tipo ?? 'vazio'} className={'size-5 ' + (tipo ? 'marca-pop' : '')} strokeWidth={2.75} aria-hidden="true" />
       </button>
 
       <div className="min-w-0 flex-1">

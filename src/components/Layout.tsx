@@ -27,7 +27,10 @@ export function Layout({ config }: { config: Config }) {
       <main className="mx-auto w-full max-w-md px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[calc(9rem+env(safe-area-inset-bottom))]">
         {/* Suspense: enquanto uma tela "sob demanda" carrega, mostra o fundo vazio por um instante. */}
         <Suspense fallback={null}>
-          <Outlet />
+          {/* A cada troca de tela, o conteúdo entra suave (some com "reduzir movimento"). */}
+          <div key={pathname} className="entra">
+            <Outlet />
+          </div>
         </Suspense>
       </main>
       <BarraAtividade />
@@ -47,8 +50,15 @@ export function Layout({ config }: { config: Config }) {
                   }`
                 }
               >
-                <Icone className="size-5" aria-hidden="true" />
-                {rotulo}
+                {({ isActive }) => (
+                  <>
+                    {/* A aba ativa ganha uma pílula leve atrás do ícone. */}
+                    <span className={`rounded-full px-4 py-1 transition-colors duration-200 ${isActive ? 'bg-destaque/15' : ''}`}>
+                      <Icone className="size-5" aria-hidden="true" />
+                    </span>
+                    {rotulo}
+                  </>
+                )}
               </NavLink>
             </li>
           ))}

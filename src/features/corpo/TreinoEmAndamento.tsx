@@ -261,7 +261,7 @@ function LinhaSerie({ treino, exercicioId, nome, ordem, feita, cargaSugerida, re
           feita ? 'border-destaque bg-destaque text-destaque-tinta' : 'border-tinta-suave/60 text-transparent'
         }`}
       >
-        <Check className="size-5" strokeWidth={2.75} aria-hidden="true" />
+        <Check key={feita ? 'feita' : 'nao'} className={'size-5 ' + (feita ? 'marca-pop' : '')} strokeWidth={2.75} aria-hidden="true" />
       </button>
     </li>
   )

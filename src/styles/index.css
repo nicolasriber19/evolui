@@ -169,6 +169,19 @@ dialog.folha[open] {
   animation: entra 240ms var(--ease-saida) both;
 }
 
+/* O check "pula" de leve quando você marca algo. */
+@keyframes marca {
+  from {
+    transform: scale(0.55);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+}
+.marca-pop {
+  animation: marca 280ms var(--ease-saida);
+}
+
 /* Tracinho novo na régua de votos: aparece quando o ponto dourado chega. */
 @keyframes tick-entra {
   from {
@@ -197,6 +210,9 @@ dialog.folha[open] {
   .troca-frase,
   dialog.folha[open] {
     animation: aparece 150ms ease-out;
+  }
+  .marca-pop {
+    animation: none;
   }
   .tick-novo {
     animation: aparece 150ms ease-out;

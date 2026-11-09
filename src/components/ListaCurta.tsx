@@ -51,7 +51,7 @@ export function ListaCurta({
                 className="-ml-2.5 grid size-11 shrink-0 place-items-center transition-transform duration-150 ease-saida active:scale-[0.9]"
               >
                 {item.feita ? (
-                  <CircleCheck className="size-5 text-destaque-texto" aria-hidden="true" />
+                  <CircleCheck className="marca-pop size-5 text-destaque-texto" aria-hidden="true" />
                 ) : (
                   <Circle className="size-5 text-tinta-suave" aria-hidden="true" />
                 )}
