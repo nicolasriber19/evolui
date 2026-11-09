@@ -64,6 +64,6 @@ describe('leitura no banco', () => {
     const r = await registrarLeitura(livro, 300, '2026-11-10')
     expect(r.terminou).toBe(true)
     expect((await db.livros.get(id))?.status).toBe('lido')
-    expect((await db.leituras.toArray()).map((l) => l.paginas)).toEqual([30, 270])
+    expect((await db.leituras.orderBy('dia').toArray()).map((l) => l.paginas)).toEqual([30, 270])
   })
 })
