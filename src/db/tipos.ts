@@ -35,6 +35,8 @@ export interface Config extends Base {
   pausaMin?: number
   /** Manter a tela ligada enquanto o timer roda. */
   manterTelaLigada?: boolean
+  /** Fase 4: último nível de cada área que você já viu (para avisar quando sobe). */
+  niveisVistos?: Partial<Record<AreaId, number>>
 }
 
 export interface Area extends Base {
@@ -105,10 +107,22 @@ export interface DesafioDaSemana {
 }
 
 /** Um registro por semana: as 3 metas, o desafio de conversa (e, na Fase 4, a revisão). */
+/** Respostas da revisão de domingo. */
+export interface RevisaoSemana {
+  funcionou: string
+  naoFuncionou: string
+  /** Preenchido quando você fecha a semana no fim da revisão. */
+  feitaEm?: number
+}
+
 export interface Semana extends Base {
   id: SemanaISO
   metas: ItemLista[]
   desafio?: DesafioDaSemana
+  /** Fase 4: o foco desta semana, escolhido na revisão da semana anterior. */
+  foco?: string
+  /** Fase 4: a revisão desta semana. */
+  revisao?: RevisaoSemana
 }
 
 // ---------- Fase 2: Corpo ----------
