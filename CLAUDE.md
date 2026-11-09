@@ -61,8 +61,12 @@ src/
   O app lembra de fazer backup após 7 dias. Pede `navigator.storage.persist()` para o navegador não apagar os dados.
 - **Foco**: no máximo 3 prioridades por dia, 3 metas por semana; sugere 1 ou 2 hábitos por área (aviso leve, sem bloquear).
 - **Convive com o "Placar da Vida"** (outro app do Nicolas, para casa/emprego/concursos). Sem importação.
-- Publicação planejada na **Vercel** já no fim da Fase 1 (PWA só instala via https e os dados ficam presos ao endereço).
-  `vercel.json` já faz todas as rotas caírem no index.html.
+- **Publicado na Vercel**: https://evolui-gilt.vercel.app (conta `nicolasriber-3803`, projeto `evolui`).
+  NÃO trocar esse endereço: os dados do celular ficam presos a ele (IndexedDB é por origem).
+  Publicar uma versão nova: `npm test && npm run build` e depois `npx vercel --prod` dentro de `evolui/`.
+  A pasta `.vercel/` (ligação com o projeto) fica fora do git. `vercel.json` faz todas as rotas caírem no index.html.
+  Se o login expirar: `npx vercel login` mostra um link com código; abrir no Chrome do Nicolas (`start chrome <link>`),
+  porque o login do Google não funciona no navegador embutido.
 - Compatível com Capacitor no futuro (não criar APK agora).
 
 ## Design (adaptado da skill scroll-desing)
@@ -80,7 +84,7 @@ src/
 
 ## Fases
 
-1. **MVP** (feito em 08/11/2026, falta só publicar na Vercel): onboarding, Hoje (voto que voa), hábitos + regra,
+1. **MVP** (feito e publicado em 08/11/2026): onboarding, Hoje (voto que voa), hábitos + regra,
    Ajustes (hábitos, áreas, tema, horários, backup), Áreas e Evolução simples, PWA offline.
    Verificado com build, Vitest e um Chrome automático (Playwright) passando por onboarding, Hoje, Ajustes,
    backup/restaurar, tema claro e modo offline.
