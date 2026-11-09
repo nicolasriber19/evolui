@@ -1,6 +1,9 @@
 import { ChartLine, LayoutGrid, Settings, Sun } from 'lucide-react'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
+import type { Config } from '../db/tipos'
+import { useMotorFoco } from '../features/estudo/motorFoco'
+import { BarraAtividade } from './BarraAtividade'
 
 const ABAS = [
   { para: '/', rotulo: 'Hoje', Icone: Sun },
@@ -10,17 +13,21 @@ const ABAS = [
 ]
 
 /** Moldura das telas principais: conteúdo no meio e a barra de abas embaixo. */
-export function Layout() {
+export function Layout({ config }: { config: Config }) {
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0) // chaves de propósito: o efeito não pode devolver nada além de uma função
   }, [pathname])
 
+  // O timer de foco continua contando em qualquer tela.
+  useMotorFoco(config)
+
   return (
     <>
-      <main className="mx-auto w-full max-w-md px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[calc(6rem+env(safe-area-inset-bottom))]">
+      <main className="mx-auto w-full max-w-md px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-[calc(9rem+env(safe-area-inset-bottom))]">
         <Outlet />
       </main>
+      <BarraAtividade />
       <nav
         aria-label="Navegação principal"
         className="fixed inset-x-0 bottom-0 z-30 border-t border-linha bg-fundo pb-[env(safe-area-inset-bottom)]"
